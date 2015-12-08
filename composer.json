@@ -1,0 +1,10 @@
+{
+  "name": "michielverkoijen/wp-simple-meeting-confirmation",
+  "type": "wordpress-plugin",
+  "license": "GPLv3",
+  "description": "Allows registered and/or non registered users to confirm if they will be present at a planned meeting.",
+  "keywords": ["plugin"],
+  "require": {
+    "composer/installers": "~1.0"
+  }
+}
