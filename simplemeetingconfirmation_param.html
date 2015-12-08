@@ -1,0 +1,134 @@
+<html>
+<head></head>
+<body>
+
+<form name=frmSMCParam>
+
+	<table width="60%" border="1">
+
+		<tr>
+			<th align="left">Date (dd/mm/yyyy) *</th>
+			<td><input type="textbox" name="txtDate"></td>
+		</tr>
+
+		<tr>
+			<th align="left">Expiration Date (dd/mm/yyyy)</th>
+			<td><input type="textbox" name="txtExpirationDate"></td>
+		</tr>
+
+		<tr>
+			<th align="left">Location</th>
+			<td><input type="textbox" name="txtLocation"></td>
+		</tr>
+
+		<tr>
+			<th align="left">Description</th>
+			<td><textarea name="txtDescription"></textarea></td>
+		</tr>
+
+		<tr>
+			<th align="left">HTML Content</th>
+			<td><textarea name="txtContent"></textarea></td>
+		</tr>
+
+		
+		<tr>
+			<th align="left">Requires Guests</th>
+			<td>
+				<input type="radio" name="optReqGuests" value="true">True
+				<input type="radio" name="optReqGuests" value="false" checked>False
+			</td>
+		</tr>
+
+		<tr>
+			<th align="left">Display Results</th>
+			<td>
+				<input type="radio" name="optDispResults" value="true" checked>True
+				<input type="radio" name="optDispResults" value="false">False
+			</td>
+		</tr>
+
+		<tr>
+			<th align="left">Users Only</th>
+			<td>
+				<input type="radio" name="optUsersOnly" value="true" checked>True
+				<input type="radio" name="optUsersOnly" value="false">False
+			</td>
+		</tr>
+
+		<tr>
+			<th align="left"></th>
+			<td><input type="button" onClick="createString()" value="Create ShortCode"></td>
+
+		</tr>
+		
+		<tr>
+			<th align="left">Result</th>
+			<td><textarea cols="70" rows="10" name="txtResults"></textarea></td>
+		 
+		</tr>
+		
+	</table>
+
+</form>
+
+<script>
+
+function createString(){
+
+	str = '[SMC';
+
+	// Date (mandatory field)
+	str += ' date="' + document.frmSMCParam.txtDate.value + '"';
+	
+	// Location
+	if(document.frmSMCParam.txtLocation.value != '')
+		str += ' location="' + document.frmSMCParam.txtLocation.value + '"';
+
+	// Expiration date
+	if(document.frmSMCParam.txtExpirationDate.value != '')
+		str += ' expireson="' + document.frmSMCParam.txtExpirationDate.value + '"';
+
+	// Description
+	if(document.frmSMCParam.txtDescription.value != '')
+	str += ' description="' + document.frmSMCParam.txtDescription.value + '"';
+
+	// Requires guests
+	str += ' reqguests="' + get_radio_value(document.frmSMCParam.optReqGuests) + '"';
+
+	// Display results
+	str += ' displayresults="' + get_radio_value(document.frmSMCParam.optDispResults) + '"';
+
+	// users only
+	str += ' usersonly="' + get_radio_value(document.frmSMCParam.optUsersOnly) + '"';
+	
+	// Close the SMC tag
+	str += "]"
+	
+	// some content is available
+	if (document.frmSMCParam.txtContent.value != '')
+		str += document.frmSMCParam.txtContent.value +"[/SMC]";
+	
+	// display results
+	document.frmSMCParam.txtResults.value = str;
+	
+	return true;
+	
+}
+
+
+
+function get_radio_value(obj){
+for (var i=0; i < obj.length; i++)
+   {
+   if (obj[i].checked)
+      var rad_val = obj[i].value;      
+   }
+   return rad_val;
+}
+
+
+</script>
+
+</body>
+</html>
