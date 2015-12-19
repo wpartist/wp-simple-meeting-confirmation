@@ -60,9 +60,9 @@
 	$SMC_plugin_name = 'simplemeetingconfirmation';
 	$SMC_thisDir = dirname( plugin_basename( __FILE__ ) );
 
-	include dirname(__FILE__) . "/" . $SMC_plugin_name . "_database.php";
-	include dirname(__FILE__) . "/" . $SMC_plugin_name . "_meetings.php";
-	include dirname(__FILE__) . "/" . $SMC_plugin_name . "_users.php";
+	include dirname(__FILE__) . "/simplemeetingconfirmation_database.php";
+	include dirname(__FILE__) . "/simplemeetingconfirmation_meetings.php";
+	include dirname(__FILE__) . "/simplemeetingconfirmation_users.php";
 
 	/*
 
@@ -255,10 +255,8 @@
 
 		// load data into a record
 		$row_data = SMC_loadUserData($SMC_date, @$_POST['txtUser']);
-
-		$output .= '<script src="' . get_bloginfo('wpurl') . '/wp-content/plugins/wp-' . $SMC_plugin_name . '/' . $SMC_plugin_name .'.js" type="text/javascript"></script>';
-		$output .= '<link rel="stylesheet" type="text/css" href="' . get_bloginfo('wpurl') . '/wp-content/plugins/wp-' . $SMC_plugin_name . '/' . $SMC_plugin_name .'.css" />';
-
+		$output .= '<script src="' . plugin_dir_url( __FILE__ ) . 'simplemeetingconfirmation.js" type="text/javascript"></script>';
+		$output .= '<link rel="stylesheet" type="text/css" href="' . plugin_dir_url( __FILE__) . 'simplemeetingconfirmation.css" />';
 		if ($SMC_displayresults == 'true') {
 			$output .= SMC_displayRecords( $SMC_date );
 		}
