@@ -55,15 +55,14 @@
 	global $SMC_location;
 	global $SMC_expireson;
 
-
 	// define the name of the table and the name of the plugin
 	$SMC_plugin_table = 'WP_SMC';
 	$SMC_plugin_name = 'simplemeetingconfirmation';
 	$SMC_thisDir = dirname( plugin_basename( __FILE__ ) );
 
-	include(dirname(__FILE__) . "/" . $SMC_plugin_name . "_database.php");
-	include(dirname(__FILE__) . "/" . $SMC_plugin_name . "_meetings.php");
-	include(dirname(__FILE__) . "/" . $SMC_plugin_name . "_users.php");
+	include dirname(__FILE__) . "/" . $SMC_plugin_name . "_database.php";
+	include dirname(__FILE__) . "/" . $SMC_plugin_name . "_meetings.php";
+	include dirname(__FILE__) . "/" . $SMC_plugin_name . "_users.php";
 
 	/*
 
@@ -88,12 +87,11 @@
 
 		global $wpdb;
 		global $SMC_plugin_table;
-		$result;
+		$result = null;
 
-		if($wpdb->get_var("SHOW TABLES LIKE '$SMC_plugin_table'") != $SMC_plugin_table)
+		if ( $wpdb->get_var( "SHOW TABLES LIKE '$SMC_plugin_table'" ) != $SMC_plugin_table ) {
 			$result = create_MeetingTable();
-		//else
-			//$result = alter_MeetingTable();
+		}
 
 		return $result;
 	}
@@ -116,7 +114,7 @@
 
 	*/
 
-	function SMC_deactivatePlugin(){
+	function SMC_deactivatePlugin() {
 	}
 
 
@@ -141,7 +139,7 @@
 
 	*/
 
-	function SMC_loadShortCodeParameters($atts) {
+	function SMC_loadShortCodeParameters( $atts ) {
 
 		global $SMC_date;
 		global $SMC_location;
@@ -182,8 +180,7 @@
 		return 0;
 	}
 
-
-		/*
+	/*
 
 	NAME: SMC_main($atts, $content=null)
 
@@ -204,13 +201,12 @@
 		[6] Load form, pre-filled if existing data
 		[7] Display results, if option is provided
 
-
 	NOTES:
 		When no parameters are passed or user is not logged, an error message will be displayed.
 
 	*/
 
-	function SMC_main($atts, $content=null){
+	function SMC_main( $atts, $content = null ) {
 
 		global $meta;
 		global $SMC_date;
@@ -228,34 +224,30 @@
 		$output = "";
 
 		// load custom variables
-		SMC_loadShortCodeParameters($atts);
+		SMC_loadShortCodeParameters( $atts );
 
 		// check if SMC_Date field was filled, if so, display meeting information
-		if ($SMC_date == '')  {
-
+		if ( $SMC_date == '' ) {
 			displayErrorMsg('dateMissing');
 			return false;
 		}
 
-
 		// check if page was posted back
-		if (@$_POST['hidUpdate'] == true) {
-
-			if($_POST['txtDate'] == $SMC_date){
-
+		if ( @$_POST['hidUpdate'] == true ) {
+			if ( $_POST['txtDate'] == $SMC_date ) {
 				if ($_POST['hidError'] != ''){
-					displayErrorMsg($_POST['hidError']);
+					displayErrorMsg( $_POST['hidError'] );
 				} else {
-					if (SMC_countRecords($_POST['txtDate'], $_POST['txtUser'], false, false) > 0) {
-						if ($SMC_usersonly == 'true') {
-							// update existing record if registered users is switched on
-							SMC_updateRegisteredUserToMeeting($_POST['txtUser'], $_POST['txtDate'], @$_POST['chkPresent'], @$_POST['txtNbGuests'], $_POST['txtComments']);
+					if ( SMC_countRecords($_POST['txtDate'], $_POST['txtUser'], false, false ) > 0 ) {
+						if ( wp_get_current_user()->display_name != "" ) {
+							// update existing record if registered user
+							SMC_updateRegisteredUserToMeeting( $_POST['txtUser'], $_POST['txtDate'], @$_POST['chkPresent'], @$_POST['txtNbGuests'], $_POST['txtComments'] );
 						} else {
 							// do not update if the name already exists for open event entry
 						}
 					} else {
 						// new record
-						SMC_addRegisteredUserToMeeting($_POST['txtDate'], $_POST['txtUser'], @$_POST['chkPresent'], @$_POST['txtNbGuests'], $_POST['txtComments']);
+						SMC_addRegisteredUserToMeeting( $_POST['txtDate'], $_POST['txtUser'], @$_POST['chkPresent'], @$_POST['txtNbGuests'], $_POST['txtComments'] );
 					}
 				}
 			}
@@ -268,14 +260,14 @@
 		$output .= '<link rel="stylesheet" type="text/css" href="' . get_bloginfo('wpurl') . '/wp-content/plugins/wp-' . $SMC_plugin_name . '/' . $SMC_plugin_name .'.css" />';
 
 		if ($SMC_displayresults == 'true') {
-			$output .= SMC_displayRecords($SMC_date);
+			$output .= SMC_displayRecords( $SMC_date );
 		}
 
-		$output .= '<form name="frmSMCRegistration" method="post" action="">
+		$output .= '<form name="frmSMCRegistration" method="post" action="' . get_permalink() . '">
 			<table border="2" width="80%">
 				<tbody>';
 
-		if ($SMC_description != '') {
+		if ( $SMC_description != '' ) {
 			$output .= '<tr>';
 				$output .= '<th>' . __('Event:', $SMC_plugin_name) . '</th>';
 				$output .= '<td colspan="'. (($content != null)? 1 : 2) . '">' . $SMC_description . '</td>';
@@ -300,7 +292,7 @@
 		}
 		$output .= '</tr>';
 
-		if ($SMC_location != ''){
+		if ( $SMC_location != '' ) {
 			$output .= '<tr>';
 			$output .= '<th>' . __('Location:', $SMC_plugin_name) . '</th>';
 			$output .= '<td colspan="' . (($content != null)? 1 : 2) . '">' . $SMC_location . '</td>';
@@ -313,11 +305,13 @@
 					<th>' . __('Name:', $SMC_plugin_name) . '</th>
 					<td colspan="' . (($content != null)? 1 : 2) . '">';
 
-			if ($SMC_usersonly == 'true') {
-				$output .= SMC_getCurrentUser()->first_name . ' ' . SMC_getCurrentUser()->last_name;
-				$output .= '<input type="hidden" name="txtUser" value="' . SMC_getCurrentUser()->first_name . ' ' . SMC_getCurrentUser()->last_name . '">';
+			if ( $SMC_usersonly == 'true' ) {
+				$output .= wp_get_current_user()->display_name;
+				$output .= '<input type="hidden" name="txtUser" value="' . esc_attr( wp_get_current_user()->display_name ) . '">';
 			} else {
-				$output .= '<input type="text" name="txtUser" onBlur="this.value=trim(this.value)" value="' . SMC_getCurrentUser()->first_name . ' ' . SMC_getCurrentUser()->last_name . '">';
+				$public_username = @$_POST['txtUser'];
+				if ($public_username == "") $public_username = wp_get_current_user()->display_name;
+				$output .= '<input type="text" name="txtUser" onBlur="this.value=trim(this.value)" value="' . esc_attr( $public_username ) . '">';
 			}
 
 			$output .= '</td>
@@ -340,14 +334,14 @@
 					<tr>';
 		}
 
-		if ($SMC_expireson != '') {
+		if ( $SMC_expireson != '' ) {
 				$output .= '<th>' . __('Please reply before: ', $SMC_plugin_name) . '</th>';
 				$output .= '<td>' . $SMC_expireson . '</td>';
 		} else {
 				$output .= '<th></th>';
 		}
 
-		if (($SMC_expireson == '') || (date('d/m/Y') <= date($SMC_expireson))) {
+		if ( ( $SMC_expireson == '' ) || (date('d/m/Y') <= date( $SMC_expireson )) ) {
 			$output .= '<td colspan="' . (($SMC_expireson != '')? 1 : 2) .'" align="right"><input type="submit" onClick="checkFields();" name="cmdSubmit" value="' . __('Submit', $SMC_plugin_name) . '" ></td>';
 		}
 
@@ -385,7 +379,7 @@
 		global $SMC_plugin_name;
 		global $SMC_thisDir;
 
-		load_plugin_textdomain($SMC_plugin_name, false, $SMC_thisDir . '/languages');
+		load_plugin_textdomain( $SMC_plugin_name, false, $SMC_thisDir . '/languages' );
 
 		return 0;
 	}
@@ -428,7 +422,7 @@
 
 	*/
 
-	add_shortcode('SMC', 'SMC_main');
+	add_shortcode( 'SMC', 'SMC_main' );
 
 	/*
 
@@ -448,7 +442,7 @@
 
 	*/
 
-	register_activation_hook(__FILE__, 'SMC_activatePlugin');
+	register_activation_hook( __FILE__, 'SMC_activatePlugin' );
 
 	/*
 
@@ -467,9 +461,7 @@
 	NOTES:
 
 	*/
-	register_deactivation_hook(__FILE__, 'SMC_deactivatePlugin');
-
-
+	register_deactivation_hook( __FILE__, 'SMC_deactivatePlugin' );
 
 	function displayErrorMsg($errorMsg){
 
@@ -492,5 +484,3 @@
 
 		return true;
 	}
-
-?>

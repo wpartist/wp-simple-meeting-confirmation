@@ -42,20 +42,19 @@
 		if ($guests == true)
 			$sqlQuery = 'SELECT sum(nbParticipants) FROM ' . $SMC_plugin_table .' WHERE meetingID="' . $meetingID . '" AND answer = "checked";';
 
-
 		$result = mysql_query($sqlQuery);
 
-		if (!$result) {
-			die('countRecords() - Invalid query: ' . mysql_error());
+		if ( !$result ) {
+			die( 'countRecords() - Invalid query: ' . mysql_error() );
 		}
 
-		$row = mysql_fetch_array($result);
+		$row = mysql_fetch_array( $result );
 
 		return $row[0];
 
 	}
 
-		/*
+	/*
 
 	NAME: SMC_displayRecords($meetingID)
 
@@ -169,7 +168,7 @@
 		global $SMC_plugin_table;
 
 		if ($current_user == null)
-			$current_user = SMC_getCurrentUser()->user_login;
+			$current_user = wp_get_current_user()->display_name;
 		if ($nbParticipants == '')
 			$nbParticipants = 0;
 		if ($answer == 'on')
@@ -213,21 +212,24 @@
 	NOTES:
 
 	*/
-	function SMC_updateRegisteredUserToMeeting($current_user, $meetingID, $answer, $nbParticipants, $comments){
+	function SMC_updateRegisteredUserToMeeting( $current_user, $meetingID, $answer, $nbParticipants, $comments ) {
 
 		global $wpdb;
 		global $SMC_plugin_table;
 
-		if ($current_user == null)
-			$current_user = SMC_getCurrentUser()->user_login;
-		if ($nbParticipants == '')
+		if ( $current_user == null ) {
+			$current_user = wp_get_current_user()->display_name;
+		}
+		if ( $nbParticipants == '' ) {
 			$nbParticipants = 0;
-		if ($answer == 'on')
+		}
+		if ( $answer == 'on' ) {
 			$answer = 'checked';
+		}
 
 		$sqlQuery = 'UPDATE ' . $SMC_plugin_table . ' SET answer = "' . $answer . '", nbParticipants = ' . $nbParticipants . ', comments = "' . $comments . '" WHERE userName = "' . $current_user . '" AND meetingID = "' . $meetingID . '";';
 
-		$result = mysql_query($sqlQuery);
+		$result = mysql_query( $sqlQuery );
 
 		if (!$result) {
 			die('updateRegisteredUserToMeeting() - Invalid query: ' . mysql_error());
@@ -263,24 +265,22 @@
 
 	*/
 
-	function SMC_deleteRegisteredUserToMeeting($meetingID, $current_user){
+	function SMC_deleteRegisteredUserToMeeting( $meetingID, $current_user ) {
 
 		global $wpdb;
 		global $SMC_plugin_table;
 
 		// $current_user = *, all users from the meeting are deleted
-		if ($current_user == '*')
+		if ($current_user == '*') {
 			$sqlQuery = 'DELETE FROM ' . $SMC_plugin_table . ' WHERE meetingID = "' . $meetingID . '";';
-		else
+		} else {
 			$sqlQuery = 'DELETE FROM ' . $SMC_plugin_table . ' WHERE meetingID = "' . $meetingID . '" AND userName = "' . $current_user . '";';
+		}
+		$result = mysql_query( $sqlQuery );
 
-		$result = mysql_query($sqlQuery);
-
-		if (!$result) {
-			die('deleteRegisteredUserToMeeting() - Invalid query: ' . mysql_error());
+		if ( !$result ) {
+			die( 'deleteRegisteredUserToMeeting() - Invalid query: ' . mysql_error() );
 		}
 
 		return $result;
 	}
-
-?>
