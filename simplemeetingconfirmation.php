@@ -12,7 +12,6 @@ License: GPL2
 // Global data for configuration
 global $SMC_plugin_table;
 global $SMC_plugin_name;
-global $SMC_thisDir;
 
 // Global data to store parameters from the short code
 global $SMC_date;
@@ -26,14 +25,13 @@ global $SMC_expireson;
 // define the name of the table and the name of the plugin
 $SMC_plugin_table = 'WP_SMC';
 $SMC_plugin_name = 'simplemeetingconfirmation';
-$SMC_thisDir = dirname( plugin_basename( __FILE__ ) );
 
 include dirname(__FILE__) . "/simplemeetingconfirmation_database.php";
 include dirname(__FILE__) . "/simplemeetingconfirmation_meetings.php";
 include dirname(__FILE__) . "/simplemeetingconfirmation_users.php";
 include dirname(__FILE__) . "/simplemeetingconfirmation_functions.php";
 
-add_action( 'init', 'SMC_initialize' );
+add_action( 'init', 'SMC_languages' );
 add_shortcode( 'SMC', 'SMC_main' );
 register_activation_hook( __FILE__, 'SMC_activatePlugin' );
 register_deactivation_hook( __FILE__, 'SMC_deactivatePlugin' );

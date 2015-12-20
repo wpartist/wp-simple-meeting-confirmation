@@ -1,0 +1,62 @@
+msgid "Date (dd/mm/yyyy)"
+msgstr "Datum (tt/mm/jjjj)"
+
+msgid "Event"
+msgstr "Beschreibung"
+
+msgid "Location"
+msgstr "Ort"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Present"
+msgstr "Anwesend"
+
+msgid "Number of guests"
+msgstr "Anzahl Gäste"
+
+msgid "Comments"
+msgstr "Kommentar"
+
+msgid "Please reply before"
+msgstr "Bitte antworten vor dem"
+
+msgid "Submit"
+msgstr "Absenden"
+
+msgid "Login"
+msgstr "Anmelden"
+
+msgid "Please add at least date=\"xx/xx/xxxx\" as a parameter of the shortcode. <BR/> Ex.: [SMC date=\"13/12/2010\"]!"
+msgstr "Bitte mindestens das Datum=\"xx/xx/xxxx\" als Parameter im Shortcode angeben. <BR/> ZB.: [SMC date=\"13/12/2010\"]!"
+
+msgid "Name cannot be blank"
+msgstr "Name darf nicht leer sein"
+
+msgid "Number of guests has an invalid value"
+msgstr "Anzahl Gäste hat ungültigen Wert"
+
+msgid "ERROR"
+msgstr "FEHLER"
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "No"
+msgstr "Nein"
+
+msgid "Grand Total"
+msgstr "Anzahl Teilnehmer"
+
+msgid "Form expired on"
+msgstr "Form expired on"
+
+msgid "Meeting"
+msgstr "Meeting"
+
+msgid "Validate"
+msgstr "Validate"
+
+msgid "If you are logged in you can sign up"
+msgstr "If you are logged in you can sign up"

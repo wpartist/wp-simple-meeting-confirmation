@@ -1,0 +1,59 @@
+msgid "Date (dd/mm/yyyy)"
+msgstr "Date (jj/mm/aaaa)"
+
+msgid "Event"
+msgstr "Description"
+
+msgid "Location"
+msgstr "Lieu"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "Present"
+msgstr "Présent"
+
+msgid "Number of guests"
+msgstr "Nombre d'invités"
+
+msgid "Comments"
+msgstr "Commentaires"
+
+msgid "Please reply before"
+msgstr "Réponse souhaitée avant le"
+
+msgid "Submit"
+msgstr "Valider"
+
+msgid "Please add at least date=\"xx/xx/xxxx\" as a parameter of the shortcode. <BR/> Ex.: [SMC date=\"13/12/2010\"]!"
+msgstr "Merci d'ajouter au moins le paramètre date=\"xx/xx/xxxx\" au shortcode. <BR/> Ex.: [SMC date=\"13/12/2010\"]!"
+
+msgid "Name cannot be blank"
+msgstr "Le champ nom ne peut pas être vide"
+
+msgid "Number of guests has an invalid value"
+msgstr "Le champs nombre d'invités a une valeur incorrecte"
+
+msgid "ERROR"
+msgstr "ERREUR"
+
+msgid "Yes"
+msgstr "Oui"
+
+msgid "No"
+msgstr "Non"
+
+msgid "Grand Total"
+msgstr "Grand Total"
+
+msgid "Form expired on "
+msgstr "Le formulaire a expiré le"
+
+msgid "Meeting"
+msgstr "Réunion"
+
+msgid "Valider"
+msgstr "Submit"
+
+msgid "If you are logged in you can sign up"
+msgstr "Vous devez être connecté pour utiliser cette extension!"

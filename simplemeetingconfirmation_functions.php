@@ -153,7 +153,6 @@ function SMC_main( $atts, $content = null ) {
 	global $SMC_usersonly;
 	global $SMC_expireson;
 	global $SMC_plugin_name;
-	global $SMC_thisDir;
 
 	$row_data;
 
@@ -199,7 +198,7 @@ function SMC_main( $atts, $content = null ) {
 
 	if ( $SMC_usersonly == "true" && wp_get_current_user()->display_name == "" ) {
 
-		$output .= "<p>If you are logged in you can sign up.</p>";
+		$output .= "<p>" . __( "If you are logged in you can sign up", $SMC_plugin_name ) . ".</p>";
 
 	} else {
 
@@ -209,13 +208,13 @@ function SMC_main( $atts, $content = null ) {
 
 		if ( $SMC_description != '' ) {
 			$output .= '<tr>';
-				$output .= '<th>' . __('Event:', $SMC_plugin_name) . '</th>';
+				$output .= '<th>' . __('Event', $SMC_plugin_name) . ':</th>';
 				$output .= '<td colspan="'. (($content != null)? 1 : 2) . '">' . $SMC_description . '</td>';
 			$output .= '</tr>';
 		}
 
 		$output .= '<tr>
-			<th>' . __('Date (dd/mm/yyyy):', $SMC_plugin_name) . '</th>
+			<th>' . __('Date (dd/mm/yyyy)', $SMC_plugin_name) . ':</th>
 			<td colspan="' . (($content != null)? 1 : 2) . '">' .$SMC_date . '</td>
 			<input type="hidden" name="txtDate" value="' . $SMC_date . '">';
 		if ($content != null) {
@@ -234,7 +233,7 @@ function SMC_main( $atts, $content = null ) {
 
 		if ( $SMC_location != '' ) {
 			$output .= '<tr>';
-			$output .= '<th>' . __('Location:', $SMC_plugin_name) . '</th>';
+			$output .= '<th>' . __('Location', $SMC_plugin_name) . ':</th>';
 			$output .= '<td colspan="' . (($content != null)? 1 : 2) . '">' . $SMC_location . '</td>';
 			$output .= '</tr>';
 		}
@@ -242,7 +241,7 @@ function SMC_main( $atts, $content = null ) {
 		if (($SMC_expireson == '') || (date('d/m/Y') <= date($SMC_expireson))) {
 
 			$output .= '<tr>
-					<th>' . __('Name:', $SMC_plugin_name) . '</th>
+					<th>' . __('Name', $SMC_plugin_name) . ':</th>
 					<td colspan="' . (($content != null)? 1 : 2) . '">';
 
 			if ( $SMC_usersonly == 'true' ) {
@@ -257,25 +256,25 @@ function SMC_main( $atts, $content = null ) {
 			$output .= '</td>
 					</tr>
 					<tr>
-					<th>' . __('Present:', $SMC_plugin_name) .'</th>
+					<th>' . __('Present', $SMC_plugin_name) .':</th>
 					<td colspan="' . (($content != null)? 1 : 2)  . ' align="center"><input type="checkbox" checked="checked" name="chkPresent" ' . @$row_data->answer . '></td>
 					</tr>';
 			if ($SMC_reqguests == 'true') {
 					$output .= '<tr>';
-					$output .= '<th>' . __('Number of people:', $SMC_plugin_name) . '</th>';
+					$output .= '<th>' . __('Number of people', $SMC_plugin_name) . ':</th>';
 					$output .= '<td colspan="' . (($content != null)? 1 : 2) . '"><input type="textbox" name="txtNbGuests" value="' . @$row_data->nbParticipants . '"></td>';
 					$output .= '</tr>';
 			}
 
 			$output .= '<tr>
-					<th>' . __('Comments:', $SMC_plugin_name) .'</th>
+					<th>' . __('Comments', $SMC_plugin_name) .':</th>
 					<td colspan="2"><textarea name="txtComments" rows="5" cols="20">' . @$row_data->comments . '</textarea></td>
 					</tr>
 					<tr>';
 		}
 
 		if ( $SMC_expireson != '' ) {
-				$output .= '<th>' . __('Please reply before: ', $SMC_plugin_name) . '</th>';
+				$output .= '<th>' . __('Please reply before', $SMC_plugin_name) . ':</th>';
 				$output .= '<td>' . $SMC_expireson . '</td>';
 		} else {
 				$output .= '<th></th>';
@@ -299,14 +298,13 @@ function SMC_main( $atts, $content = null ) {
 
 /*
 
-NAME: SMC_initialize()
+NAME: SMC_languages()
 
 DESCRIPTION: Load the localisation files
 
 INPUTS:
 
 OUTPUTS:
-	0: Default return
 
 PROCESS:
 	[1] Load localisation file
@@ -315,14 +313,11 @@ NOTES:
 
 */
 
-function SMC_initialize() {
+function SMC_languages() {
 
 	global $SMC_plugin_name;
-	global $SMC_thisDir;
+	load_plugin_textdomain( $SMC_plugin_name, false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
-	load_plugin_textdomain( $SMC_plugin_name, false, $SMC_thisDir . '/languages' );
-
-	return 0;
 }
 
 
