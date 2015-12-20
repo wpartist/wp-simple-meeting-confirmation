@@ -13,6 +13,9 @@ msgstr "Naam"
 msgid "Present"
 msgstr "Aanwezig"
 
+msgid "Number"
+msgstr "Aantal"
+
 msgid "Number of guests"
 msgstr "Aantal deelnemers"
 

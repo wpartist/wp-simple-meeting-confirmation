@@ -13,6 +13,9 @@ msgstr "Name"
 msgid "Present"
 msgstr "Anwesend"
 
+msgid "Number"
+msgstr "Anzahl"
+
 msgid "Number of guests"
 msgstr "Anzahl Gäste"
 
