@@ -8,7 +8,7 @@ Author URI:        http://vuong.fr/myitblog/about/
 Author:            Frederic VUONG
 Donate link:       
 Requires at least: 3.0 
-Tested up to:      3.0.1
+Tested up to:      4.4
 Stable tag:        1.8.3
 Version:           1.8.3
 
@@ -108,3 +108,6 @@ Please do :o) I will integrate it to the next release.
 = Which languages are available for this plugin? =
 Currently, there are three languages:
 * English (thanks to me)
+* German
+* French
+* Dutch
