@@ -83,14 +83,14 @@
 
 	*/
 
-	function SMC_activatePlugin(){
+	function SMC_activatePlugin() {
 
 		global $wpdb;
 		global $SMC_plugin_table;
 		$result = null;
 
 		if ( $wpdb->get_var( "SHOW TABLES LIKE '$SMC_plugin_table'" ) != $SMC_plugin_table ) {
-			$result = create_MeetingTable();
+			$result = create_MeetingTable( $SMC_plugin_table );
 		}
 
 		return $result;
@@ -261,94 +261,101 @@
 			$output .= SMC_displayRecords( $SMC_date );
 		}
 
-		$output .= '<form name="frmSMCRegistration" method="post" action="' . get_permalink() . '">
-			<table border="2" width="80%">
-				<tbody>';
+		if ( $SMC_usersonly == "true" && wp_get_current_user()->display_name == "" ) {
 
-		if ( $SMC_description != '' ) {
-			$output .= '<tr>';
-				$output .= '<th>' . __('Event:', $SMC_plugin_name) . '</th>';
-				$output .= '<td colspan="'. (($content != null)? 1 : 2) . '">' . $SMC_description . '</td>';
-			$output .= '</tr>';
-		}
+			$output .= "<p>If you are logged in you can sign up.</p>";
 
-		$output .= '<tr>
-			<th>' . __('Date (dd/mm/yyyy):', $SMC_plugin_name) . '</th>
-			<td colspan="' . (($content != null)? 1 : 2) . '">' .$SMC_date . '</td>
-			<input type="hidden" name="txtDate" value="' . $SMC_date . '">';
-		if ($content != null) {
-			$i = 3; // for default fields (date,  Present, submit button)
-			if ($SMC_description != '') $i++;
-			if ($SMC_location != '') $i++;
-			if ($SMC_reqguests == 'true') $i++;
-			if ($SMC_expireson != '') {
-				if (date('d/m/Y') > date($SMC_expireson)){
-					$i = 4; // already expired, display limited number of fields
-				}
-			}
-			$output .= '<td align="center" rowspan="' . $i . '">' . $content . '</td>';
-		}
-		$output .= '</tr>';
-
-		if ( $SMC_location != '' ) {
-			$output .= '<tr>';
-			$output .= '<th>' . __('Location:', $SMC_plugin_name) . '</th>';
-			$output .= '<td colspan="' . (($content != null)? 1 : 2) . '">' . $SMC_location . '</td>';
-			$output .= '</tr>';
-		}
-
-		if (($SMC_expireson == '') || (date('d/m/Y') <= date($SMC_expireson))) {
-
-			$output .= '<tr>
-					<th>' . __('Name:', $SMC_plugin_name) . '</th>
-					<td colspan="' . (($content != null)? 1 : 2) . '">';
-
-			if ( $SMC_usersonly == 'true' ) {
-				$output .= wp_get_current_user()->display_name;
-				$output .= '<input type="hidden" name="txtUser" value="' . esc_attr( wp_get_current_user()->display_name ) . '">';
-			} else {
-				$public_username = @$_POST['txtUser'];
-				if ($public_username == "") $public_username = wp_get_current_user()->display_name;
-				$output .= '<input type="text" name="txtUser" onBlur="this.value=trim(this.value)" value="' . esc_attr( $public_username ) . '">';
-			}
-
-			$output .= '</td>
-					</tr>
-					<tr>
-					<th>' . __('Present:', $SMC_plugin_name) .'</th>
-					<td colspan="' . (($content != null)? 1 : 2)  . ' align="center"><input type="checkbox" checked="checked" name="chkPresent" ' . $row_data['answer'] . '></td>
-					</tr>';
-			if ($SMC_reqguests == 'true') {
-					$output .= '<tr>';
-					$output .= '<th>' . __('Number of people:', $SMC_plugin_name) . '</th>';
-					$output .= '<td colspan="' . (($content != null)? 1 : 2) . '"><input type="textbox" name="txtNbGuests" value="' . $row_data['nbParticipants'] . '"></td>';
-					$output .= '</tr>';
-			}
-
-			$output .= '<tr>
-					<th>' . __('Comments:', $SMC_plugin_name) .'</th>
-					<td colspan="2"><textarea name="txtComments" rows="5" cols="20">' . $row_data['comments'] . '</textarea></td>
-					</tr>
-					<tr>';
-		}
-
-		if ( $SMC_expireson != '' ) {
-				$output .= '<th>' . __('Please reply before: ', $SMC_plugin_name) . '</th>';
-				$output .= '<td>' . $SMC_expireson . '</td>';
 		} else {
-				$output .= '<th></th>';
-		}
 
-		if ( ( $SMC_expireson == '' ) || (date('d/m/Y') <= date( $SMC_expireson )) ) {
-			$output .= '<td colspan="' . (($SMC_expireson != '')? 1 : 2) .'" align="right"><input type="submit" onClick="checkFields();" name="cmdSubmit" value="' . __('Submit', $SMC_plugin_name) . '" ></td>';
-		}
+			$output .= '<form name="frmSMCRegistration" method="post" action="' . get_permalink() . '">
+				<table border="2" width="80%">
+					<tbody>';
 
-		$output .= '</tr>
-				</tbody>
-				</table>
-				<input name="hidUpdate" type="hidden" value="true">
-				<input name="hidError" type="hidden" value="">
-				</form>';
+			if ( $SMC_description != '' ) {
+				$output .= '<tr>';
+					$output .= '<th>' . __('Event:', $SMC_plugin_name) . '</th>';
+					$output .= '<td colspan="'. (($content != null)? 1 : 2) . '">' . $SMC_description . '</td>';
+				$output .= '</tr>';
+			}
+
+			$output .= '<tr>
+				<th>' . __('Date (dd/mm/yyyy):', $SMC_plugin_name) . '</th>
+				<td colspan="' . (($content != null)? 1 : 2) . '">' .$SMC_date . '</td>
+				<input type="hidden" name="txtDate" value="' . $SMC_date . '">';
+			if ($content != null) {
+				$i = 3; // for default fields (date,  Present, submit button)
+				if ($SMC_description != '') $i++;
+				if ($SMC_location != '') $i++;
+				if ($SMC_reqguests == 'true') $i++;
+				if ($SMC_expireson != '') {
+					if (date('d/m/Y') > date($SMC_expireson)){
+						$i = 4; // already expired, display limited number of fields
+					}
+				}
+				$output .= '<td align="center" rowspan="' . $i . '">' . $content . '</td>';
+			}
+			$output .= '</tr>';
+
+			if ( $SMC_location != '' ) {
+				$output .= '<tr>';
+				$output .= '<th>' . __('Location:', $SMC_plugin_name) . '</th>';
+				$output .= '<td colspan="' . (($content != null)? 1 : 2) . '">' . $SMC_location . '</td>';
+				$output .= '</tr>';
+			}
+
+			if (($SMC_expireson == '') || (date('d/m/Y') <= date($SMC_expireson))) {
+
+				$output .= '<tr>
+						<th>' . __('Name:', $SMC_plugin_name) . '</th>
+						<td colspan="' . (($content != null)? 1 : 2) . '">';
+
+				if ( $SMC_usersonly == 'true' ) {
+					$output .= wp_get_current_user()->display_name;
+					$output .= '<input type="hidden" name="txtUser" value="' . esc_attr( wp_get_current_user()->display_name ) . '">';
+				} else {
+					$public_username = @$_POST['txtUser'];
+					if ($public_username == "") $public_username = wp_get_current_user()->display_name;
+					$output .= '<input type="text" name="txtUser" onBlur="this.value=trim(this.value)" value="' . esc_attr( $public_username ) . '">';
+				}
+
+				$output .= '</td>
+						</tr>
+						<tr>
+						<th>' . __('Present:', $SMC_plugin_name) .'</th>
+						<td colspan="' . (($content != null)? 1 : 2)  . ' align="center"><input type="checkbox" checked="checked" name="chkPresent" ' . @$row_data->answer . '></td>
+						</tr>';
+				if ($SMC_reqguests == 'true') {
+						$output .= '<tr>';
+						$output .= '<th>' . __('Number of people:', $SMC_plugin_name) . '</th>';
+						$output .= '<td colspan="' . (($content != null)? 1 : 2) . '"><input type="textbox" name="txtNbGuests" value="' . @$row_data->nbParticipants . '"></td>';
+						$output .= '</tr>';
+				}
+
+				$output .= '<tr>
+						<th>' . __('Comments:', $SMC_plugin_name) .'</th>
+						<td colspan="2"><textarea name="txtComments" rows="5" cols="20">' . @$row_data->comments . '</textarea></td>
+						</tr>
+						<tr>';
+			}
+
+			if ( $SMC_expireson != '' ) {
+					$output .= '<th>' . __('Please reply before: ', $SMC_plugin_name) . '</th>';
+					$output .= '<td>' . $SMC_expireson . '</td>';
+			} else {
+					$output .= '<th></th>';
+			}
+
+			if ( ( $SMC_expireson == '' ) || (date('d/m/Y') <= date( $SMC_expireson )) ) {
+				$output .= '<td colspan="' . (($SMC_expireson != '')? 1 : 2) .'" align="right"><input type="submit" onClick="checkFields();" name="cmdSubmit" value="' . __('Submit', $SMC_plugin_name) . '" ></td>';
+			}
+
+			$output .= '</tr>
+					</tbody>
+					</table>
+					<input name="hidUpdate" type="hidden" value="true">
+					<input name="hidError" type="hidden" value="">
+					</form>';
+		}
 
         return $output;
 

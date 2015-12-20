@@ -25,11 +25,10 @@
 
 	*/
 
-	function SMC_countRecords($meetingID, $userName, $yesOnly, $guests){
+	function SMC_countRecords( $meetingID, $userName, $yesOnly, $guests ) {
 
 		global $wpdb;
 		global $SMC_plugin_table;
-		$result;
 
 		if ($userName == null)
 			$sqlQuery = 'SELECT COUNT(*) FROM ' . $SMC_plugin_table .' WHERE meetingID="' . $meetingID . '" ;';
@@ -42,15 +41,9 @@
 		if ($guests == true)
 			$sqlQuery = 'SELECT sum(nbParticipants) FROM ' . $SMC_plugin_table .' WHERE meetingID="' . $meetingID . '" AND answer = "checked";';
 
-		$result = mysql_query($sqlQuery);
+		$result = $wpdb->get_var( $sqlQuery );
 
-		if ( !$result ) {
-			die( 'countRecords() - Invalid query: ' . mysql_error() );
-		}
-
-		$row = mysql_fetch_array( $result );
-
-		return $row[0];
+		return $result;
 
 	}
 
@@ -82,37 +75,31 @@
 		global $SMC_reqguests;
 		global $SMC_plugin_name;
 
-		$row;
-		$sqlQuery;
-		$resultData;
-
 		$outputHTML = "";
 
 		$sqlQuery = 'SELECT * FROM ' . $SMC_plugin_table .' WHERE meetingID="' . $meetingID . '" ;';
-
-		$resultData =  mysql_query($sqlQuery);
+		$resultData =  $wpdb->get_results( $sqlQuery );
 
 		$outputHTML .= '<table>';
 		$outputHTML .=  '<th>' . __('Name', $SMC_plugin_name) . '</th>';
 		$outputHTML .=  '<th>' . __('Present', $SMC_plugin_name) .'</th>';
-		if ($SMC_reqguests == 'true') {
+		if ( $SMC_reqguests == 'true' ) {
 			$outputHTML .=  '<th>' . __('Number', $SMC_plugin_name) . '</th>';
 		}
 		$outputHTML .= '<th>' . __('Comments', $SMC_plugin_name) . '</th>';
 
-		while($row = mysql_fetch_array($resultData)){
+		foreach ( $resultData as $row ) {
 			$outputHTML .= '<tr>';
-				$outputHTML .= '<td>' . esc_html($row['userName']) . '</td>';
+				$outputHTML .= '<td>' . esc_html($row->userName) . '</td>';
 				$outputHTML .= '<td>' ;
-					if($row['answer'] == 'checked')
+					if($row->answer == 'checked')
 						$outputHTML .= __('Yes', $SMC_plugin_name);
 					else
 						$outputHTML .= __('No', $SMC_plugin_name);
 				$outputHTML .= '</td>';
 				if ($SMC_reqguests == 'true')
-					$outputHTML .= '<td>' . $row['nbParticipants'] . '</td>';
-				$outputHTML .= '<td>' . esc_html($row['comments']) . '</td>';
-
+					$outputHTML .= '<td>' . $row->nbParticipants . '</td>';
+				$outputHTML .= '<td>' . esc_html($row->comments) . '</td>';
 			$outputHTML .= '</tr>';
 		}
 
@@ -120,7 +107,7 @@
 		$outputHTML .= '<th><b>' . __('Total ', $SMC_plugin_name) .'</b></th>';
 		if ($SMC_reqguests == 'true') {
 			$outputHTML .= '<td></td>';
-			$outputHTML .= '<td><b>' . (SMC_countRecords($meetingID, null, false, true)) . '</b></td>';
+			$outputHTML .= '<td><b>' . ( SMC_countRecords($meetingID, null, false, true)) . '</b></td>';
 		} else {
 			$outputHTML .= '<td><b>' . SMC_countRecords($meetingID, null, true, false) . '/' . SMC_countRecords($meetingID, null, false, false) . '</b></td>';
 		}
@@ -134,7 +121,6 @@
 		return $outputHTML;
 
 	}
-
 
 	/*
 
@@ -162,7 +148,7 @@
 	NOTES:
 
 	*/
-	function SMC_addRegisteredUserToMeeting($meetingID, $current_user, $answer, $nbParticipants, $comments){
+	function SMC_addRegisteredUserToMeeting( $meetingID, $current_user, $answer, $nbParticipants, $comments ) {
 
 		global $wpdb;
 		global $SMC_plugin_table;
@@ -175,13 +161,8 @@
 			$answer = 'checked';
 
 		$sqlQuery = 'INSERT INTO ' . $SMC_plugin_table . '(userName, meetingID, answer, nbParticipants, comments) VALUES("' . $current_user . '", "' . $meetingID . '", "' . $answer . '", ' . $nbParticipants .', "' . $comments . '");';
-		$result = mysql_query($sqlQuery);
+		$result = $wpdb->query( $sqlQuery );
 
-		if (!$result) {
-			die('addRegisteredUserToMeeting() - Invalid query: ' . mysql_error());
-		}
-
-		// run the query and return result
 		return $result;
 	}
 
@@ -228,12 +209,7 @@
 		}
 
 		$sqlQuery = 'UPDATE ' . $SMC_plugin_table . ' SET answer = "' . $answer . '", nbParticipants = ' . $nbParticipants . ', comments = "' . $comments . '" WHERE userName = "' . $current_user . '" AND meetingID = "' . $meetingID . '";';
-
-		$result = mysql_query( $sqlQuery );
-
-		if (!$result) {
-			die('updateRegisteredUserToMeeting() - Invalid query: ' . mysql_error());
-		}
+		$result = $wpdb->query( $sqlQuery );
 
 		return $result;
 	}
@@ -276,11 +252,7 @@
 		} else {
 			$sqlQuery = 'DELETE FROM ' . $SMC_plugin_table . ' WHERE meetingID = "' . $meetingID . '" AND userName = "' . $current_user . '";';
 		}
-		$result = mysql_query( $sqlQuery );
-
-		if ( !$result ) {
-			die( 'deleteRegisteredUserToMeeting() - Invalid query: ' . mysql_error() );
-		}
+		$result = $wpdb->query( $sqlQuery );
 
 		return $result;
 	}

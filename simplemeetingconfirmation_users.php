@@ -23,22 +23,14 @@
 
 	*/
 
-	function SMC_loadUserData($meetingID, $userName){
+	function SMC_loadUserData( $meetingID, $posted_username ) {
 
 		global $wpdb;
 		global $SMC_plugin_table;
-		$row_data;
-		$result;
 
-		$sqlQuery = 'SELECT userName, meetingID, answer, nbParticipants, comments FROM ' . $SMC_plugin_table .' WHERE meetingID="' . $meetingID . '" AND userName="' . $userName . '";';
-		$result =  mysql_query($sqlQuery);
+		$sqlQuery = 'SELECT userName, meetingID, answer, nbParticipants, comments FROM ' . $SMC_plugin_table .' WHERE meetingID="' . $meetingID . '" AND userName="' . $posted_username . '";';
+		$result =  $wpdb->get_row( $sqlQuery );
 
-		if (!$result) {
-			die('loadUserData() - Invalid query: ' . mysql_error());
-		}
+		return $result;
 
-		$row_data = mysql_fetch_array($result);
-
-		return $row_data;
 	}
-
