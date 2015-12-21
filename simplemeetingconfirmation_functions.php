@@ -154,24 +154,23 @@ function SMC_main( $atts, $content = null ) {
 	global $SMC_expireson;
 	global $SMC_plugin_name;
 
-	$row_data;
-
 	$output = "";
+	$output .= '<link rel="stylesheet" type="text/css" href="' . plugin_dir_url( __FILE__) . 'simplemeetingconfirmation.css" />';
 
 	// load custom variables
 	SMC_loadShortCodeParameters( $atts );
 
 	// check if SMC_Date field was filled, if so, display meeting information
 	if ( $SMC_date == '' ) {
-		displayErrorMsg('dateMissing');
-		return false;
+		$output .= SMC_display_error_message( 'dateMissing' );
+		return $output;
 	}
 
 	// check if page was posted back
 	if ( @$_POST['hidUpdate'] == true ) {
 		if ( $_POST['txtDate'] == $SMC_date ) {
 			if ($_POST['hidError'] != ''){
-				displayErrorMsg( $_POST['hidError'] );
+				$output .= SMC_display_error_message( $_POST['hidError'] );
 			} else {
 				if ( SMC_countRecords($_POST['txtDate'], $_POST['txtUser'], false, false ) > 0 ) {
 					if ( wp_get_current_user()->display_name != "" ) {
@@ -189,9 +188,8 @@ function SMC_main( $atts, $content = null ) {
 	}
 
 	// load data into a record
-	$row_data = SMC_loadUserData($SMC_date, @$_POST['txtUser']);
+	$row_data = SMC_loadUserData( $SMC_date, @$_POST['txtUser'] );
 	$output .= '<script src="' . plugin_dir_url( __FILE__ ) . 'simplemeetingconfirmation.js" type="text/javascript"></script>';
-	$output .= '<link rel="stylesheet" type="text/css" href="' . plugin_dir_url( __FILE__) . 'simplemeetingconfirmation.css" />';
 	if ($SMC_displayresults == 'true') {
 		$output .= SMC_displayRecords( $SMC_date );
 	}
@@ -321,24 +319,23 @@ function SMC_languages() {
 }
 
 
-function displayErrorMsg( $errorMsg ) {
+function SMC_display_error_message( $kind_of_error ) {
 
 	global $SMC_plugin_name;
-	$message;
+	$output = "";
 
-	if($errorMsg == 'dateMissing')
-		$message = __('Please add at least date="xx/xx/xxxx" as a parameter of the shortcode. <BR/> Ex.: [SMC date="13/12/2010"]!', $SMC_plugin_name);
+	if ( $kind_of_error == 'dateMissing' ) {
+		$message = __( 'Please add at least date="xx/xx/xxxx" as a parameter of the shortcode. <BR/> Ex.: [SMC date="13/12/2010"]!', $SMC_plugin_name );
+	} elseif ( $kind_of_error == 'txtUser' ) {
+		$message = __( 'Name cannot be blank', $SMC_plugin_name );
+	} elseif ( $kind_of_error == 'txtNbGuests') {
+		$message = __( 'Number of guests has an invalid value', $SMC_plugin_name );
+	}
 
-	if($errorMsg == 'txtUser')
-		$message = __('Name cannot be blank.', $SMC_plugin_name);
+	$output .= '<p class="error">';
+		$output .=  __('ERROR: ', $SMC_plugin_name);
+		$output .=  $message;
+	$output .= '</p>';
 
-	if($errorMsg == 'txtNbGuests')
-		$message = __('Number of people has an invalid value.', $SMC_plugin_name);
-
-	echo '<p class="error">';
-		echo __('ERROR: ', $SMC_plugin_name);
-		echo $message;
-	echo '</p>';
-
-	return true;
+	return $output;
 }

@@ -32,7 +32,7 @@ msgid "Login"
 msgstr "Anmelden"
 
 msgid "Please add at least date=\"xx/xx/xxxx\" as a parameter of the shortcode. <BR/> Ex.: [SMC date=\"13/12/2010\"]!"
-msgstr "Bitte mindestens das Datum=\"xx/xx/xxxx\" als Parameter im Shortcode angeben. <BR/> ZB.: [SMC date=\"13/12/2010\"]!"
+msgstr "Bitte mindestens das date=\"xx/xx/xxxx\" als Parameter im Shortcode angeben. ZB.: [SMC date=\"13/12/2010\"]"
 
 msgid "Name cannot be blank"
 msgstr "Name darf nicht leer sein"

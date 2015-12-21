@@ -29,7 +29,7 @@ msgid "Submit"
 msgstr "Valider"
 
 msgid "Please add at least date=\"xx/xx/xxxx\" as a parameter of the shortcode. <BR/> Ex.: [SMC date=\"13/12/2010\"]!"
-msgstr "Merci d'ajouter au moins le paramètre date=\"xx/xx/xxxx\" au shortcode. <BR/> Ex.: [SMC date=\"13/12/2010\"]!"
+msgstr "Merci d'ajouter au moins le paramètre date=\"xx/xx/xxxx\" au shortcode. Ex.: [SMC date=\"13/12/2010\"]"
 
 msgid "Name cannot be blank"
 msgstr "Le champ nom ne peut pas être vide"
