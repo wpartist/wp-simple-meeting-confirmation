@@ -16,7 +16,7 @@ msgstr "Anwesend"
 msgid "Number"
 msgstr "Anzahl"
 
-msgid "Number of guests"
+msgid "Number of people"
 msgstr "Anzahl Gäste"
 
 msgid "Comments"
@@ -49,8 +49,8 @@ msgstr "Ja"
 msgid "No"
 msgstr "Nein"
 
-msgid "Grand Total"
-msgstr "Anzahl Teilnehmer"
+msgid "Total"
+msgstr "Anzahl"
 
 msgid "Form expired on"
 msgstr "Form expired on"
