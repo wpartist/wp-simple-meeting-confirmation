@@ -173,7 +173,7 @@ function SMC_main( $atts, $content = null ) {
 				$output .= SMC_display_error_message( $_POST['hidError'] );
 			} else {
 				if ( SMC_countRecords($_POST['txtDate'], $_POST['txtUser'], false, false ) > 0 ) {
-					if ( wp_get_current_user()->display_name != "" ) {
+					if ( is_user_logged_in() ) {
 						// update existing record if registered user
 						SMC_updateRegisteredUserToMeeting( $_POST['txtUser'], $_POST['txtDate'], @$_POST['chkPresent'], @$_POST['txtNbGuests'], $_POST['txtComments'] );
 					} else {
@@ -188,13 +188,12 @@ function SMC_main( $atts, $content = null ) {
 	}
 
 	// load data into a record
-	$row_data = SMC_loadUserData( $SMC_date, @$_POST['txtUser'] );
 	$output .= '<script src="' . plugin_dir_url( __FILE__ ) . 'simplemeetingconfirmation.js" type="text/javascript"></script>';
 	if ($SMC_displayresults == 'true') {
 		$output .= SMC_displayRecords( $SMC_date );
 	}
 
-	if ( $SMC_usersonly == "true" && wp_get_current_user()->display_name == "" ) {
+	if ( $SMC_usersonly == "true" && !is_user_logged_in() ) {
 
 		$output .= "<p>" . __( "If you are logged in you can sign up", $SMC_plugin_name ) . ".</p>";
 
@@ -238,24 +237,28 @@ function SMC_main( $atts, $content = null ) {
 
 		if (($SMC_expireson == '') || (date('d/m/Y') <= date($SMC_expireson))) {
 
-			$output .= '<tr>
-					<th>' . __('Name', $SMC_plugin_name) . ':</th>
-					<td colspan="' . (($content != null)? 1 : 2) . '">';
-
-			if ( $SMC_usersonly == 'true' ) {
-				$output .= wp_get_current_user()->display_name;
-				$output .= '<input type="hidden" name="txtUser" value="' . esc_attr( wp_get_current_user()->display_name ) . '">';
+			if ( is_user_logged_in() ) {
+				$userName = wp_get_current_user()->display_name;
+				$output .= '<tr style="display: none;"><th></th><td/>';
 			} else {
-				$public_username = @$_POST['txtUser'];
-				if ($public_username == "") $public_username = wp_get_current_user()->display_name;
-				$output .= '<input type="text" name="txtUser" onBlur="this.value=trim(this.value)" value="' . esc_attr( $public_username ) . '">';
+				$userName = @$_POST['txtUser'];
+				$output .= '<tr>
+						<th>' . __('Name', $SMC_plugin_name) . ':</th>
+						<td colspan="' . (($content != null)? 1 : 2) . '">';
+			}
+			$row_data = SMC_loadUserData( $SMC_date, $userName );
+
+			if ( $SMC_usersonly == 'true' || is_user_logged_in() ) {
+				$output .= '<input type="hidden" name="txtUser" value="' . esc_attr( $userName ) . '">';
+			} else {
+				$output .= '<input type="text" name="txtUser" onBlur="this.value=trim(this.value)" value="' . esc_attr( $userName ). '">';
 			}
 
 			$output .= '</td>
 					</tr>
 					<tr>
 					<th>' . __('Present', $SMC_plugin_name) .':</th>
-					<td colspan="' . (($content != null)? 1 : 2)  . ' align="center"><input type="checkbox" checked="checked" name="chkPresent" ' . @$row_data->answer . '></td>
+					<td colspan="' . (($content != null)? 1 : 2)  . '" align="center"><input type="checkbox" name="chkPresent"' . @$row_data->answer . '></td>
 					</tr>';
 			if ($SMC_reqguests == 'true') {
 					$output .= '<tr>';
@@ -333,8 +336,8 @@ function SMC_display_error_message( $kind_of_error ) {
 	}
 
 	$output .= '<p class="error">';
-		$output .=  __('ERROR: ', $SMC_plugin_name);
-		$output .=  $message;
+	$output .=  __('ERROR: ', $SMC_plugin_name);
+	$output .=  $message;
 	$output .= '</p>';
 
 	return $output;
